@@ -1,0 +1,7 @@
+{
+  "host": "127.0.0.1",
+  "port": 5055,
+  "shared_mailbox": "MassMutual MMSD Underwriting & New Business Case Updates",
+  "allow_send": true,
+  "open_browser": true
+}

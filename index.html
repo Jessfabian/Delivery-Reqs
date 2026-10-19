@@ -8,7 +8,8 @@
 </head>
 <body>
 <header class="top">
-<div class="brand"><img id="logo" src= "logoMassMutual_preview.png" alt="MassMutual Strategic Distributors"><span>Delivery Requirements Builder</span></div>  <div class="steps">
+  <div class="brand"><img id="logo" alt="MassMutual Strategic Distributors"><span>Delivery Requirements Builder</span></div>
+  <div class="steps">
     <button class="step active" data-step="1">1&nbsp; Case details</button>
     <button class="step" data-step="2">2&nbsp; Review &amp; generate</button>
   </div>
@@ -68,7 +69,7 @@
     <div class="card">
       <h2>Delivery requirements due</h2>
       <label class="check"><input type="checkbox" name="supplement" checked> Supplement to the application (Insurability Statement | Policy Receipt | Signed Amendment)</label>
-      <p class="hint">Click to add common requirements, or type your own. Up to 7 rows; empty rows are hidden on the PDF.</p>
+      <p class="hint">Click a requirement to add it (click again to remove). Selected requirements list first; type anything else in the blank row below. Empty rows never appear on the PDF.</p>
       <div class="chips" id="reqChips"></div>
       <ol id="reqList" class="reqs"></ol>
       <button type="button" class="link" id="addReq">+ Add custom requirement</button>

@@ -37,6 +37,8 @@ label.check input { width:auto; margin:0; }
 .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
 .chip { border:1px solid var(--navy2); color:var(--navy2); background:#fff; border-radius:16px; padding:5px 12px; cursor:pointer; font:inherit; font-size:13px; }
 .chip[disabled] { opacity:.4; cursor:default; }
+.chip.on { background:var(--navy2); color:#fff; }
+.chip.on::before { content:"\2713  "; }
 .reqs { margin:0; padding-left:22px; }
 .reqs li { margin-bottom:6px; }
 .reqs .r { display:flex; gap:8px; align-items:center; }
