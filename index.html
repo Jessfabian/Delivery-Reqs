@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MMSD Delivery Requirements Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img id="logo" alt="MassMutual Strategic Distributors"><span>Delivery Requirements Builder</span></div>
+  <div class="steps">
+    <button class="step active" data-step="1">1&nbsp; Case details</button>
+    <button class="step" data-step="2">2&nbsp; Review &amp; generate</button>
+  </div>
+</header>
+
+<main>
+<!-- ============================================================ STEP 1 -->
+<section id="step1" class="page">
+  <form id="caseForm" autocomplete="off" novalidate>
+
+    <div class="card">
+      <h2>How is the policy being delivered?</h2>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="method" value="docusign" checked><span><b>DocuSign</b><small>Electronic signature</small></span></label>
+        <label><input type="radio" name="method" value="pdf"><span><b>PDF</b><small>Sent as a PDF to the agency contact</small></span></label>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Policy information</h2>
+        <div class="row">
+          <label>Insured first name<input name="firstName" required></label>
+          <label>Insured last name<input name="lastName" required></label>
+        </div>
+        <div class="row">
+          <label>Policy #<input name="policy" required inputmode="numeric" placeholder="e.g. 38875506"></label>
+          <label>Delivery date<input name="deliveryDate" type="date" required>
+            <small class="hint">Defaults to 30 days from today (same as the PDF form)</small></label>
+        </div>
+        <label>Frequency
+          <select name="freq" required>
+            <option value="Annual">Annual</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Quarterly">Quarterly</option>
+            <option value="Semi-Annual">Semi-Annual</option>
+            <option value="Single Pay">Single Pay</option>
+          </select>
+        </label>
+        <p class="hint" id="freqHint"></p>
+      </div>
+
+      <div class="card">
+        <h2>Premium</h2>
+        <label>Total initial premium<div class="money"><input name="premium" inputmode="decimal" placeholder="0.00" required></div></label>
+        <div class="row">
+          <label>To be paid with TLIR<div class="money"><input name="tlir" inputmode="decimal" placeholder="0.00"></div></label>
+          <label>To be paid with 1035 exchange<div class="money"><input name="x1035" inputmode="decimal" placeholder="0.00"></div></label>
+        </div>
+        <div class="totals">
+          <div><span>Total funds received</span><b id="tFunds">$ 0.00</b></div>
+          <div class="big"><span>Payor balance due</span><b id="tBalance">$ 0.00</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Delivery requirements due</h2>
+      <label class="check"><input type="checkbox" name="supplement" checked> Supplement to the application (Insurability Statement | Policy Receipt | Signed Amendment)</label>
+      <p class="hint">Click to add common requirements, or type your own. Up to 7 rows; empty rows are hidden on the PDF.</p>
+      <div class="chips" id="reqChips"></div>
+      <ol id="reqList" class="reqs"></ol>
+      <button type="button" class="link" id="addReq">+ Add custom requirement</button>
+      <div id="extraPages" class="note" hidden></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Agency (BGA) contact</h2>
+        <label>Contact name<input name="bgaName" list="dlBgaName" required></label>
+        <label>Contact email<input name="bgaEmail" type="email" list="dlBgaEmail" required></label>
+        <label>Agent (financial professional)<input name="agent" list="dlAgent"></label>
+        <label>Agent email <small>(DocuSign signer table)</small><input name="agentEmail" type="email"></label>
+      </div>
+      <div class="card">
+        <h2>MassMutual team</h2>
+        <label>Account manager<input name="amName" list="dlAmName" required></label>
+        <label>Account manager email<input name="amEmail" type="email" list="dlAmEmail" required></label>
+        <label>Underwriter<input name="uw" list="dlUw"></label>
+        <p class="hint">Names and emails you use are remembered on this computer and suggested next time.</p>
+      </div>
+    </div>
+
+    <div class="card" id="signerCard">
+      <h2>DocuSign signers <small>(added to the Policy Delivery email)</small></h2>
+      <table class="signers">
+        <thead><tr><th>Role</th><th>Name</th><th>Email address</th><th>Access code</th></tr></thead>
+        <tbody id="signerRows"></tbody>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="ghost" id="clearBtn">Clear form</button>
+      <button type="submit" class="primary">Review &amp; generate →</button>
+    </div>
+  </form>
+</section>
+
+<!-- ============================================================ STEP 2 -->
+<section id="step2" class="page" hidden>
+  <div class="grid-review">
+    <div class="card pdfcard">
+      <div class="cardhead">
+        <h2>Delivery Requirement Sheet</h2>
+        <button class="primary" id="dlPdf">Download PDF</button>
+      </div>
+      <iframe id="pdfFrame" title="PDF preview"></iframe>
+    </div>
+    <div>
+      <div id="outlookStatus" class="note"></div>
+      <div id="emails"></div>
+      <div class="actions">
+        <button class="ghost" id="backBtn">← Edit details</button>
+        <button class="primary" id="dlAll">Download PDF + both emails</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<datalist id="dlBgaName"></datalist><datalist id="dlBgaEmail"></datalist><datalist id="dlAgent"></datalist>
+<datalist id="dlAmName"></datalist><datalist id="dlAmEmail"></datalist><datalist id="dlUw"></datalist>
+<div id="toast" hidden></div>
+
+<script src="lib/pdf-lib.min.js"></script>
+<script src="lib/fontkit.umd.min.js"></script>
+<script src="assets.js"></script>
+<script src="pdfbuilder.js"></script>
+<script src="templates.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
